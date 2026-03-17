@@ -151,17 +151,17 @@ const CharacterCreationScreen = {
 
             Utils.drawPanel(ctx, x, y, 190, 420, border, selected ? '#1a1a2a' : '#101018');
 
-            // Race icon — use portrait sprite
-            const racePortrait = 'race_' + key;
-            if (Sprites.get(racePortrait)) {
-                Sprites.draw(ctx, racePortrait, x + 95, y + 50, { scale: 1.0 });
-            } else {
-                ctx.fillStyle = race.color;
-                ctx.beginPath();
-                ctx.arc(x + 95, y + 50, 28, 0, Math.PI * 2);
-                ctx.fill();
-                Utils.drawTextCentered(ctx, key[0], x + 95, y + 50, 'bold 24px Segoe UI', '#fff');
-            }
+            // Race portrait — render humanoid preview
+            const raceAppearances = {
+                Human:     { skin: '#e0d0b8', hair: '#5a3820', armor: '#3a5a8a', armorLight: '#5878a8', pants: '#2a3450', boots: '#3a2a1a', weapon: 'sword', shield: true, helmetColor: '#4a6a98', shoulderPad: true, skirtArmor: true, bracers: true },
+                Elf:       { skin: '#f0e8d8', hair: '#c0b070', armor: '#2a5a3a', armorLight: '#3a7a48', pants: '#1a3a20', boots: '#2a3a18', weapon: 'longbow', shield: false, helmetColor: null, earPointy: true, slender: true, longHair: true, quiver: true, capeColor: '#1a4a20' },
+                Dragonkin: { skin: '#c08a60', hair: '#1a0808', armor: '#5a2818', armorLight: '#7a3828', pants: '#2a1810', boots: '#1a0808', weapon: 'axe', shield: false, helmetColor: '#5a2020', horns: true, hornColor: '#5a4a30', scales: true, scaleColor: 'rgba(200,80,40,0.25)', glowEyes: true, eyeColor: '#cc4400', shoulderPad: true, spikePads: true, tail: true }
+            };
+            const raceApp = raceAppearances[key] || raceAppearances.Human;
+            ctx.save();
+            ctx.beginPath(); ctx.rect(x + 5, y + 5, 180, 90); ctx.clip();
+            BattleScreen._drawHumanoid(ctx, x + 95, y + 82, 3.8, 1, 0, 'idle', raceApp, false, 0, {});
+            ctx.restore();
 
             // Name
             Utils.drawTextCentered(ctx, race.name, x + 95, y + 95, 'bold 18px Segoe UI', race.color);
@@ -232,17 +232,25 @@ const CharacterCreationScreen = {
 
             Utils.drawPanel(ctx, x, y, cardW, cardH, border, selected ? '#1a1a2a' : '#101018');
 
-            // Icon — use class portrait sprite
-            const classPortrait = 'class_' + key;
-            if (Sprites.get(classPortrait)) {
-                Sprites.draw(ctx, classPortrait, x + cardW / 2, y + 36, { scale: 0.7 });
-            } else {
-                ctx.fillStyle = cls.color;
-                ctx.beginPath();
-                ctx.arc(x + cardW / 2, y + 36, 20, 0, Math.PI * 2);
-                ctx.fill();
-                Utils.drawTextCentered(ctx, key[0], x + cardW / 2, y + 36, 'bold 18px Segoe UI', '#fff');
-            }
+            // Class icon — render humanoid preview
+            const classHeroApps = BattleScreen._heroAppearance;
+            const classApp = classHeroApps[key] || classHeroApps.Warrior;
+            const classPreviewApp = {
+                skin: '#e0d0b8', hair: '#3a2010',
+                armor: classApp.armor, armorLight: classApp.armorLight,
+                pants: '#2a2a3a', boots: '#3a2a18',
+                weapon: classApp.weapon, shield: classApp.shield,
+                helmetColor: classApp.helmetColor, shoulderPad: classApp.shoulderPad,
+                mask: classApp.mask, hat: classApp.hat, heavy: classApp.heavy,
+                robe: classApp.robe, scarf: classApp.scarf, quiver: classApp.quiver,
+                skirtArmor: classApp.skirtArmor, hood: classApp.hood,
+                bracers: classApp.bracers, gauntlets: classApp.gauntlets,
+                plume: classApp.plume, plumeColor: classApp.plumeColor
+            };
+            ctx.save();
+            ctx.beginPath(); ctx.rect(x + 5, y + 5, cardW - 10, 64); ctx.clip();
+            BattleScreen._drawHumanoid(ctx, x + cardW / 2, y + 64, 2.5, 1, 0, 'idle', classPreviewApp, false, 0, { capeColor: classApp.capeColor });
+            ctx.restore();
 
             Utils.drawTextCentered(ctx, cls.name, x + cardW / 2, y + 68, 'bold 14px Segoe UI', cls.color);
 
@@ -306,26 +314,86 @@ const CharacterCreationScreen = {
             }
         }
 
-        // Preview at bottom of panel
-        const fy = panelY + 260;
-        Utils.drawTextCentered(ctx, `${this.playerName} of ${this.kingdomName}`, Renderer.cx, fy, 'bold 20px Segoe UI', this.bannerColor);
-        Utils.drawTextCentered(ctx, `${this.selectedRace} ${this.selectedClass}`, Renderer.cx, fy + 25, '16px Segoe UI', '#a0a0b0');
+        // Preview at bottom of panel — full humanoid hero preview
+        const fy = panelY + 225;
+        Utils.drawTextCentered(ctx, `${this.playerName} of ${this.kingdomName}`, Renderer.cx, fy - 10, 'bold 18px Segoe UI', this.bannerColor);
+        Utils.drawTextCentered(ctx, `${this.selectedRace} ${this.selectedClass}`, Renderer.cx, fy + 10, '13px Segoe UI', '#a0a0b0');
 
-        // Draw banner
-        ctx.fillStyle = this.bannerColor;
-        ctx.fillRect(Renderer.cx - 20, fy + 40, 40, 50);
-        ctx.fillStyle = '#0a0a12';
-        Utils.drawTextCentered(ctx, this.playerName[0] || '?', Renderer.cx, fy + 65, 'bold 22px Segoe UI', '#0a0a12');
+        // Draw hero humanoid preview
+        const classApp = BattleScreen._heroAppearance[this.selectedClass] || BattleScreen._heroAppearance.Warrior;
+        const raceSkin = { Human: '#e0d0b8', Elf: '#f0e8d8', Dragonkin: '#c08a60' };
+        const raceHair = { Human: '#3a2010', Elf: '#c0b070', Dragonkin: '#1a0808' };
+        const raceEyes = { Human: '#2a4a1a', Elf: '#30a060', Dragonkin: '#cc4400' };
+        const p = this.selectedRace;
+        const previewApp = {
+            skin: raceSkin[p] || '#e0d0b8', hair: raceHair[p] || '#3a2010',
+            armor: classApp.armor, armorLight: classApp.armorLight,
+            pants: '#2a2a3a', boots: '#3a2a18',
+            weapon: classApp.weapon, shield: classApp.shield,
+            helmetColor: classApp.helmetColor, shoulderPad: classApp.shoulderPad,
+            mask: classApp.mask, hat: classApp.hat, heavy: classApp.heavy,
+            robe: classApp.robe, scarf: classApp.scarf, quiver: classApp.quiver,
+            skirtArmor: classApp.skirtArmor, hood: classApp.hood,
+            bracers: classApp.bracers, gauntlets: classApp.gauntlets,
+            plume: classApp.plume, plumeColor: classApp.plumeColor,
+            earPointy: p === 'Elf', slender: p === 'Elf', longHair: p === 'Elf',
+            horns: p === 'Dragonkin', hornColor: '#5a4a30',
+            scales: p === 'Dragonkin', scaleColor: 'rgba(200,80,40,0.25)',
+            tail: p === 'Dragonkin', glowEyes: p === 'Dragonkin',
+            spikePads: p === 'Dragonkin' && classApp.shoulderPad,
+            eyeColor: raceEyes[p]
+        };
+        ctx.save();
+        ctx.beginPath(); ctx.rect(Renderer.cx - 50, fy + 15, 100, 110); ctx.clip();
+        BattleScreen._drawHumanoid(ctx, Renderer.cx, fy + 100, 4.5, 1, 0, 'idle', previewApp, false, 0, { capeColor: this.bannerColor });
+        ctx.restore();
     },
 
     renderConfirm(ctx) {
         const race = Races[this.selectedRace];
         const cls = Classes[this.selectedClass];
-        const panelX = Renderer.cx - 280;
-        const panelY = 130;
+        const panelX = Renderer.cx - 300;
+        const panelY = 110;
 
-        Utils.drawPanel(ctx, panelX, panelY, 560, 430, '#c8a84e', '#14141f');
+        Utils.drawPanel(ctx, panelX, panelY, 600, 480, '#c8a84e', '#14141f');
         Utils.drawTextCentered(ctx, 'Confirm Your Champion', Renderer.cx, panelY + 30, 'bold 22px Segoe UI', '#c8a84e');
+
+        // Hero humanoid preview on the right side
+        const previewX = panelX + 480;
+        const previewY = panelY + 280;
+        const classApp = BattleScreen._heroAppearance[this.selectedClass] || BattleScreen._heroAppearance.Warrior;
+        const raceSkin = { Human: '#e0d0b8', Elf: '#f0e8d8', Dragonkin: '#c08a60' };
+        const raceHair = { Human: '#3a2010', Elf: '#c0b070', Dragonkin: '#1a0808' };
+        const raceEyes = { Human: '#2a4a1a', Elf: '#30a060', Dragonkin: '#cc4400' };
+        const p = this.selectedRace;
+        const confirmApp = {
+            skin: raceSkin[p] || '#e0d0b8', hair: raceHair[p] || '#3a2010',
+            armor: classApp.armor, armorLight: classApp.armorLight,
+            pants: '#2a2a3a', boots: '#3a2a18',
+            weapon: classApp.weapon, shield: classApp.shield,
+            helmetColor: classApp.helmetColor, shoulderPad: classApp.shoulderPad,
+            mask: classApp.mask, hat: classApp.hat, heavy: classApp.heavy,
+            robe: classApp.robe, scarf: classApp.scarf, quiver: classApp.quiver,
+            skirtArmor: classApp.skirtArmor, hood: classApp.hood,
+            bracers: classApp.bracers, gauntlets: classApp.gauntlets,
+            plume: classApp.plume, plumeColor: classApp.plumeColor,
+            earPointy: p === 'Elf', slender: p === 'Elf', longHair: p === 'Elf',
+            horns: p === 'Dragonkin', hornColor: '#5a4a30',
+            scales: p === 'Dragonkin', scaleColor: 'rgba(200,80,40,0.25)',
+            tail: p === 'Dragonkin', glowEyes: p === 'Dragonkin',
+            spikePads: p === 'Dragonkin' && classApp.shoulderPad,
+            eyeColor: raceEyes[p]
+        };
+        // Glow ring behind preview
+        ctx.shadowColor = this.bannerColor;
+        ctx.shadowBlur = 16;
+        ctx.fillStyle = 'rgba(0,0,0,0)';
+        ctx.beginPath(); ctx.arc(previewX, previewY, 1, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.save();
+        ctx.beginPath(); ctx.rect(previewX - 70, panelY + 50, 140, 300); ctx.clip();
+        BattleScreen._drawHumanoid(ctx, previewX, previewY, 6.5, 1, 0, 'idle', confirmApp, false, 0, { capeColor: this.bannerColor });
+        ctx.restore();
 
         let y = panelY + 65;
         const lx = panelX + 40;

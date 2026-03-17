@@ -599,30 +599,60 @@ const BattleScreen = {
     },
 
     _getSpriteKey(u) {
-        if (u.side === 'ally') {
-            const map = { infantry: 'unit_infantry', archer: 'unit_archer', cavalry: 'unit_cavalry', brute: 'unit_brute' };
-            return map[u.type] || null;
-        } else {
-            // All new enemy types just use the humanoid renderer (return null)
-            return null;
-        }
+        // All units use the humanoid renderer for visual consistency
+        return null;
     },
 
     // ─── Appearance configs ───
     _unitAppearance: {
-        // Allied
-        infantry:    { skin: '#d4a87a', hair: '#5a3820', armor: '#3a5a8a', armorLight: '#5878a8', pants: '#2a3450', boots: '#3a2a1a', weapon: 'sword', shield: true, helmetColor: '#4a6a98', shoulderPad: true, skirtArmor: true },
-        archer:      { skin: '#c8a478', hair: '#7a5a28', armor: '#3a5a3a', armorLight: '#4a7a48', pants: '#2a3828', boots: '#4a3818', weapon: 'bow', shield: false, helmetColor: null, shoulderPad: false, quiver: true },
-        cavalry:     { skin: '#d4a87a', hair: '#2a1810', armor: '#8a7a38', armorLight: '#a89848', pants: '#4a3820', boots: '#5a3818', weapon: 'lance', shield: true, helmetColor: '#988a40', shoulderPad: true, mounted: true },
-        brute:       { skin: '#bca080', hair: '#1a1a1a', armor: '#6a3828', armorLight: '#8a5840', pants: '#3a2818', boots: '#2a1810', weapon: 'hammer', shield: false, helmetColor: '#5a3020', shoulderPad: true, bulky: true },
+        // Allied — detailed configs matching enemy quality
+        infantry: {
+            skin: '#d4a87a', hair: '#5a3820', armor: '#3a5a8a', armorLight: '#5878a8', pants: '#2a3450', boots: '#3a2a1a',
+            weapon: 'sword', shield: true, helmetColor: '#4a6a98', shoulderPad: true, skirtArmor: true,
+            bracers: true, gauntlets: true
+        },
+        archer: {
+            skin: '#c8a478', hair: '#7a5a28', armor: '#3a5a3a', armorLight: '#4a7a48', pants: '#2a3828', boots: '#4a3818',
+            weapon: 'bow', shield: false, helmetColor: null, shoulderPad: false, quiver: true,
+            bracers: true, hood: true
+        },
+        cavalry: {
+            skin: '#d4a87a', hair: '#2a1810', armor: '#8a7a38', armorLight: '#a89848', pants: '#4a3820', boots: '#5a3818',
+            weapon: 'lance', shield: true, helmetColor: '#988a40', shoulderPad: true, mounted: true,
+            skirtArmor: true, bracers: true, capeColor: '#6a5a28'
+        },
+        brute: {
+            skin: '#bca080', hair: '#1a1a1a', armor: '#6a3828', armorLight: '#8a5840', pants: '#3a2818', boots: '#2a1810',
+            weapon: 'hammer', shield: false, helmetColor: '#5a3020', shoulderPad: true, bulky: true,
+            bracers: true, gauntlets: true, spikePads: true
+        },
     },
 
     _heroAppearance: {
-        Warrior:  { armor: '#3a4a7a', armorLight: '#5868a0', weapon: 'greatsword', shield: true, helmetColor: '#4858a0', shoulderPad: true, capeColor: null, skirtArmor: true },
-        Ninja:    { armor: '#2a2838', armorLight: '#3a3848', weapon: 'daggers', shield: false, helmetColor: null, shoulderPad: false, capeColor: null, mask: true, scarf: true },
-        Archer:   { armor: '#3a5a3a', armorLight: '#488a48', weapon: 'longbow', shield: false, helmetColor: null, shoulderPad: false, capeColor: '#2a4a2a', quiver: true },
-        Mage:     { armor: '#4a387a', armorLight: '#6050a0', weapon: 'staff', shield: false, helmetColor: null, shoulderPad: false, capeColor: '#3a2a6a', hat: true, robe: true },
-        Tank:     { armor: '#5a5a5a', armorLight: '#7a7a7a', weapon: 'sword', shield: true, helmetColor: '#6a6a6a', shoulderPad: true, capeColor: null, heavy: true, skirtArmor: true },
+        Warrior: {
+            armor: '#3a4a7a', armorLight: '#5868a0', weapon: 'greatsword', shield: true,
+            helmetColor: '#4858a0', shoulderPad: true, capeColor: null, skirtArmor: true,
+            bracers: true, gauntlets: true, heavy: true, plume: true, plumeColor: '#c8a040'
+        },
+        Ninja: {
+            armor: '#1a1828', armorLight: '#2a2838', weapon: 'daggers', shield: false,
+            helmetColor: null, shoulderPad: false, capeColor: null, mask: true, scarf: true,
+            bracers: true
+        },
+        Archer: {
+            armor: '#2a4a2a', armorLight: '#3a6a38', weapon: 'longbow', shield: false,
+            helmetColor: null, shoulderPad: true, capeColor: '#1a3a18', quiver: true,
+            bracers: true, hood: true
+        },
+        Mage: {
+            armor: '#3a2860', armorLight: '#5040a0', weapon: 'staff', shield: false,
+            helmetColor: null, shoulderPad: false, capeColor: '#2a1850', hat: true, robe: true
+        },
+        Tank: {
+            armor: '#4a4a5a', armorLight: '#6a6a7a', weapon: 'sword', shield: true,
+            helmetColor: '#5a5a6a', shoulderPad: true, capeColor: null, heavy: true,
+            skirtArmor: true, bracers: true, gauntlets: true, plume: true, plumeColor: '#a0a0b0'
+        },
     },
 
     // ─── Feudalism-style humanoid renderer ───
@@ -670,11 +700,53 @@ const BattleScreen = {
             case 'attack': {
                 const atkPhase = atk;
                 const swingProg = Math.min(atkPhase * 6, 1);
-                armSwingFront = -swingProg * 1.8 * f;
-                weapSwing = -swingProg * 2.2;
-                bodyLean = swingProg * 0.15 * f;
-                bodyBob = -swingProg * 4 * S;
-                legAngleFront = swingProg * 0.2;
+                const wep = appearance.weapon || 'sword';
+                if (wep === 'bow' || wep === 'longbow') {
+                    // Bow draw: pull back arm, lean back slightly, no weapon swing
+                    armSwingFront = -swingProg * 0.8 * f;
+                    armSwingBack = swingProg * 0.6 * f;
+                    weapSwing = 0;
+                    bodyLean = -swingProg * 0.08 * f;
+                    bodyBob = -swingProg * 1.5 * S;
+                } else if (wep === 'staff' || wep === 'wand') {
+                    // Cast: raise arm upward, lean forward
+                    armSwingFront = -swingProg * 2.2 * f;
+                    weapSwing = -swingProg * 0.6;
+                    bodyLean = swingProg * 0.08 * f;
+                    bodyBob = -swingProg * 2 * S;
+                    armSwingBack = -swingProg * 0.5;
+                } else if (wep === 'daggers') {
+                    // Quick dual slash: fast alternating arms
+                    const slashPhase = Math.sin(swingProg * Math.PI * 2);
+                    armSwingFront = -swingProg * 1.6 * f + slashPhase * 0.3;
+                    armSwingBack = -swingProg * 1.2 * f - slashPhase * 0.3;
+                    weapSwing = -swingProg * 2.0;
+                    bodyLean = swingProg * 0.2 * f;
+                    bodyBob = -swingProg * 5 * S;
+                    legAngleFront = swingProg * 0.35;
+                } else if (wep === 'lance') {
+                    // Thrust: strong forward lean, minimal arm swing
+                    armSwingFront = -swingProg * 1.0 * f;
+                    weapSwing = -swingProg * 1.0;
+                    bodyLean = swingProg * 0.25 * f;
+                    bodyBob = -swingProg * 6 * S;
+                    legAngleFront = swingProg * 0.3;
+                } else if (wep === 'hammer' || wep === 'axe' || wep === 'greatsword') {
+                    // Heavy overhead swing: big windup, strong lean
+                    armSwingFront = -swingProg * 2.2 * f;
+                    weapSwing = -swingProg * 2.8;
+                    bodyLean = swingProg * 0.2 * f;
+                    bodyBob = -swingProg * 5 * S;
+                    legAngleFront = swingProg * 0.25;
+                    armSwingBack = swingProg * 0.3;
+                } else {
+                    // Default melee swing
+                    armSwingFront = -swingProg * 1.8 * f;
+                    weapSwing = -swingProg * 2.2;
+                    bodyLean = swingProg * 0.15 * f;
+                    bodyBob = -swingProg * 4 * S;
+                    legAngleFront = swingProg * 0.2;
+                }
                 break;
             }
             case 'hurt':
@@ -1611,7 +1683,7 @@ const BattleScreen = {
             ctx.fillRect(-armThick * 0.3, armUpper + armLower, armThick * 0.6, armThick * 0.4);
 
             // Weapon
-            this._drawWeapon(ctx, 0, armUpper + armLower, S * small, f, appearance.weapon, weapSwing, t, hurtTint);
+            this._drawWeapon(ctx, 0, armUpper + armLower, S * small, f, appearance.weapon, weapSwing, t, hurtTint, state);
             ctx.restore();
         }
 
@@ -1870,7 +1942,7 @@ const BattleScreen = {
     },
 
     // ─── Weapon renderer (bigger, more detailed) ───
-    _drawWeapon(ctx, hx, hy, S, facing, weaponType, swingAngle, t, hurtTint) {
+    _drawWeapon(ctx, hx, hy, S, facing, weaponType, swingAngle, t, hurtTint, animState) {
         const f = facing;
         ctx.save();
         ctx.translate(hx, hy);
@@ -2085,40 +2157,47 @@ const BattleScreen = {
             case 'longbow': {
                 const isLong = weaponType === 'longbow';
                 const bLen = isLong ? 18 * S : 13 * S;
+                const isDrawn = animState === 'attack';
+                // Pull amount for draw animation (0 = relaxed, 1 = fully drawn)
+                const drawPull = isDrawn ? Math.min(swingAngle * -0.45 + 0.75, 1.0) : 0;
                 ctx.rotate(-0.1);
-                // Bow limbs (thicker, more defined)
+                // Bow limbs (thicker, more defined) - flex when drawn
+                const limbFlex = drawPull * 0.15;
                 ctx.strokeStyle = '#7a5020';
                 ctx.lineWidth = 1.8 * S;
                 ctx.beginPath();
-                ctx.arc(3.5 * S, -bLen * 0.35, bLen * 0.55, -1.3, 1.3);
+                ctx.arc(3.5 * S, -bLen * 0.35, bLen * 0.55, -1.3 + limbFlex, 1.3 - limbFlex);
                 ctx.stroke();
                 // Bow limb inner color
                 ctx.strokeStyle = '#a07030';
                 ctx.lineWidth = 0.8 * S;
                 ctx.beginPath();
-                ctx.arc(3.5 * S, -bLen * 0.35, bLen * 0.55, -1.3, 1.3);
+                ctx.arc(3.5 * S, -bLen * 0.35, bLen * 0.55, -1.3 + limbFlex, 1.3 - limbFlex);
                 ctx.stroke();
-                // String
+                // String - pulled back during draw
+                const strTopX = 3.5 * S + Math.cos(-1.3 + limbFlex) * bLen * 0.55;
+                const strTopY = -bLen * 0.35 + Math.sin(-1.3 + limbFlex) * bLen * 0.55;
+                const strBotX = 3.5 * S + Math.cos(1.3 - limbFlex) * bLen * 0.55;
+                const strBotY = -bLen * 0.35 + Math.sin(1.3 - limbFlex) * bLen * 0.55;
+                const stringPullX = -1 * S - drawPull * 4 * S; // string pulls backward
+                const stringMidY = -bLen * 0.35;
                 ctx.strokeStyle = '#c0b088';
                 ctx.lineWidth = 0.35 * S;
-                const strTopX = 3.5 * S + Math.cos(-1.3) * bLen * 0.55;
-                const strTopY = -bLen * 0.35 + Math.sin(-1.3) * bLen * 0.55;
-                const strBotX = 3.5 * S + Math.cos(1.3) * bLen * 0.55;
-                const strBotY = -bLen * 0.35 + Math.sin(1.3) * bLen * 0.55;
                 ctx.beginPath();
                 ctx.moveTo(strTopX, strTopY);
+                ctx.lineTo(stringPullX, stringMidY);
                 ctx.lineTo(strBotX, strBotY);
                 ctx.stroke();
-                // Arrow nocked
+                // Arrow nocked (moves with string pull)
                 ctx.fillStyle = '#a08040';
-                ctx.fillRect(-1 * S, -bLen * 0.35 - 0.4 * S, 7 * S, 0.8 * S);
+                ctx.fillRect(stringPullX - 0.4 * S, -bLen * 0.35 - 0.4 * S, (6 * S + drawPull * 4 * S), 0.8 * S);
                 // Arrow shaft rings
                 ctx.strokeStyle = 'rgba(0,0,0,0.08)';
                 ctx.lineWidth = 0.2 * S;
                 for (let i = 0; i < 3; i++) {
                     ctx.beginPath();
-                    ctx.moveTo(i * 2 * S, -bLen * 0.35 - 0.4 * S);
-                    ctx.lineTo(i * 2 * S, -bLen * 0.35 + 0.4 * S);
+                    ctx.moveTo(stringPullX + i * 2 * S, -bLen * 0.35 - 0.4 * S);
+                    ctx.lineTo(stringPullX + i * 2 * S, -bLen * 0.35 + 0.4 * S);
                     ctx.stroke();
                 }
                 // Arrowhead (broadhead)
@@ -2133,23 +2212,24 @@ const BattleScreen = {
                 // Fletching (two-tone)
                 ctx.fillStyle = '#c06040';
                 ctx.beginPath();
-                ctx.moveTo(-1 * S, -bLen * 0.35);
-                ctx.lineTo(-3 * S, -bLen * 0.35 - 1.5 * S);
-                ctx.lineTo(-0.5 * S, -bLen * 0.35);
+                ctx.moveTo(stringPullX - 1 * S, -bLen * 0.35);
+                ctx.lineTo(stringPullX - 3 * S, -bLen * 0.35 - 1.5 * S);
+                ctx.lineTo(stringPullX - 0.5 * S, -bLen * 0.35);
                 ctx.fill();
                 ctx.fillStyle = '#d0d0c0';
                 ctx.beginPath();
-                ctx.moveTo(-1 * S, -bLen * 0.35);
-                ctx.lineTo(-3 * S, -bLen * 0.35 + 1.5 * S);
-                ctx.lineTo(-0.5 * S, -bLen * 0.35);
+                ctx.moveTo(stringPullX - 1 * S, -bLen * 0.35);
+                ctx.lineTo(stringPullX - 3 * S, -bLen * 0.35 + 1.5 * S);
+                ctx.lineTo(stringPullX - 0.5 * S, -bLen * 0.35);
                 ctx.fill();
                 // Nock
                 ctx.fillStyle = '#e0d0b0';
-                ctx.fillRect(-1.5 * S, -bLen * 0.35 - 0.3 * S, 0.5 * S, 0.6 * S);
+                ctx.fillRect(stringPullX - 1.5 * S, -bLen * 0.35 - 0.3 * S, 0.5 * S, 0.6 * S);
                 break;
             }
             case 'staff': {
-                ctx.rotate(-0.15);
+                const isCasting = animState === 'attack';
+                ctx.rotate(-0.15 - (isCasting ? swingAngle * 0.1 : 0));
                 const len = 22 * S;
                 // Staff shaft (gnarled wood)
                 ctx.fillStyle = '#5a3a20';
@@ -2208,6 +2288,22 @@ const BattleScreen = {
                     ctx.beginPath();
                     ctx.arc(Math.cos(ang) * pr, -len - 3.5 * S + Math.sin(ang) * pr, 0.5 * S, 0, Math.PI * 2);
                     ctx.fill();
+                }
+                // Cast burst (extra glow during attack)
+                if (isCasting) {
+                    const burst = Math.abs(Math.sin(t * 12)) * 0.6;
+                    ctx.fillStyle = `rgba(180,140,255,${burst})`;
+                    ctx.beginPath();
+                    ctx.arc(0, -len - 3.5 * S, 10 * S, 0, Math.PI * 2);
+                    ctx.fill();
+                    for (let i = 0; i < 6; i++) {
+                        const ang = t * 8 + i * Math.PI / 3;
+                        const pr = 7 * S + Math.sin(t * 10 + i) * 3 * S;
+                        ctx.fillStyle = `rgba(220,200,255,${burst * 0.8})`;
+                        ctx.beginPath();
+                        ctx.arc(Math.cos(ang) * pr, -len - 3.5 * S + Math.sin(ang) * pr, 1 * S, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
                 }
                 break;
             }
@@ -2506,24 +2602,74 @@ const BattleScreen = {
                     appearance.hair = '#c0b070';
                     appearance.longHair = true;
                     appearance.eyeColor = '#30a060';
-                    // Elf archers get green-tinted armor
+                    // Elf troops use lighter, elegant green-tinted armor
+                    appearance.armor = '#2a5a3a';
+                    appearance.armorLight = '#3a7a48';
+                    appearance.pants = '#1a3a20';
+                    appearance.boots = '#2a3a18';
                     if (u.type === 'archer') {
-                        appearance.armor = '#2a6a30';
-                        appearance.armorLight = '#3a8a40';
+                        appearance.armor = '#1a5a28';
+                        appearance.armorLight = '#2a7a38';
+                        appearance.hood = true;
+                        appearance.capeColor = '#1a4a20';
+                    } else if (u.type === 'infantry') {
+                        appearance.helmetColor = null; // elegant no-helm look
+                        appearance.capeColor = '#2a5a30';
+                    } else if (u.type === 'cavalry') {
+                        appearance.armor = '#3a6a3a';
+                        appearance.armorLight = '#4a8a48';
+                        appearance.capeColor = '#2a5a28';
+                    } else if (u.type === 'brute') {
+                        // War Treant - bark-skinned, nature-powered
+                        appearance.skin = '#6a8a4a';
+                        appearance.bulky = true;
+                        appearance.armor = '#4a6828';
+                        appearance.armorLight = '#5a7838';
+                        appearance.bark = true;
+                        appearance.weapon = 'club';
                     }
                 } else if (pRace === 'Dragonkin') {
                     appearance.skin = '#c08a60';
                     appearance.horns = true;
                     appearance.hornColor = '#5a4a30';
                     appearance.scales = true;
-                    appearance.scaleColor = 'rgba(200,80,40,0.2)';
+                    appearance.scaleColor = 'rgba(200,80,40,0.25)';
                     appearance.glowEyes = true;
                     appearance.eyeColor = '#cc4400';
                     appearance.hair = '#1a0808';
-                    // Dragonkin get spiked shoulder pads at tier 1+
-                    if (tier >= 1) appearance.spikePads = true;
-                    // Brutes get tails
-                    if (u.type === 'brute') appearance.tail = true;
+                    appearance.spikePads = true;
+                    // Dragonkin troops use dark red/black armor with fire tones
+                    appearance.armor = '#5a2818';
+                    appearance.armorLight = '#7a3828';
+                    appearance.pants = '#2a1810';
+                    appearance.boots = '#1a0808';
+                    if (u.type === 'infantry') {
+                        appearance.helmetColor = '#5a2020';
+                        appearance.plume = true;
+                        appearance.plumeColor = '#aa3020';
+                    } else if (u.type === 'archer') {
+                        appearance.armor = '#4a2018';
+                        appearance.armorLight = '#6a3028';
+                        appearance.eyeColor = '#ff6600';
+                    } else if (u.type === 'cavalry') {
+                        appearance.armor = '#6a3020';
+                        appearance.armorLight = '#8a4030';
+                        appearance.tail = true;
+                    } else if (u.type === 'brute') {
+                        // Wyvern-like heavy brute
+                        appearance.tail = true;
+                        appearance.bulky = true;
+                        appearance.weapon = 'axe';
+                        appearance.armor = '#5a1810';
+                        appearance.armorLight = '#7a2820';
+                        appearance.lavaGlow = true;
+                    }
+                } else {
+                    // Human: steel/blue medieval look - already default, add banner cape
+                    const bannerCol = (GameState.player && GameState.player.bannerColor) || '#3a6abd';
+                    if (u.type === 'cavalry') {
+                        appearance.capeColor = bannerCol;
+                    }
                 }
             }
 
@@ -2646,13 +2792,8 @@ const BattleScreen = {
         ctx.shadowBlur = 12;
 
         const heroClass = GameState.player.class;
-        const spriteKey = 'hero_' + heroClass.toLowerCase();
-        const sprite = Sprites.get(spriteKey);
 
-        if (sprite) {
-            const spriteScale = s / 18;
-            Sprites.draw(ctx, spriteKey, dx, dy, { scale: spriteScale, flipX: !h.facingRight });
-        } else {
+        {
             // Golden hero platform
             ctx.fillStyle = 'rgba(200,168,80,0.28)';
             ctx.beginPath(); ctx.ellipse(dx, dy + s * 0.35, s * 0.65, s * 0.22, 0, 0, Math.PI * 2); ctx.fill();
@@ -2691,8 +2832,11 @@ const BattleScreen = {
                 scarf: classApp.scarf,
                 quiver: classApp.quiver,
                 skirtArmor: classApp.skirtArmor,
-                bracers: classApp.heavy || classApp.shoulderPad,
-                gauntlets: classApp.heavy,
+                hood: classApp.hood,
+                bracers: classApp.bracers || classApp.heavy || classApp.shoulderPad,
+                gauntlets: classApp.gauntlets || classApp.heavy,
+                plume: classApp.plume,
+                plumeColor: classApp.plumeColor,
                 // Elf features
                 earPointy: playerRace === 'Elf',
                 slender: playerRace === 'Elf',
@@ -2705,10 +2849,20 @@ const BattleScreen = {
                 tail: playerRace === 'Dragonkin',
                 glowEyes: playerRace === 'Dragonkin',
                 spikePads: playerRace === 'Dragonkin' && classApp.shoulderPad,
-                plume: playerRace === 'Dragonkin' && classApp.helmetColor,
-                plumeColor: '#aa3020',
                 eyeColor: raceEyes[playerRace],
             };
+            // Dragonkin hero overrides - fiercer armor colors
+            if (playerRace === 'Dragonkin') {
+                appearance.plume = appearance.plume || (classApp.helmetColor ? true : false);
+                appearance.plumeColor = '#aa3020';
+                appearance.armor = this._darkenColor(classApp.armor || '#3a3a4a', 0.85);
+            }
+            // Elf hero overrides - lighter elegant tones
+            if (playerRace === 'Elf') {
+                if (!classApp.mask && !classApp.hat && !classApp.hood) {
+                    appearance.capeColor = appearance.capeColor || '#2a5a30';
+                }
+            }
             const scale = s / 7;
             const capeCol = GameState.player.bannerColor || classApp.capeColor;
             this._drawHumanoid(ctx, dx, dy, scale, facing, t, state, appearance, hurtTint, h.attackAnimTimer, { capeColor: capeCol, eyeColor: raceEyes[playerRace] });
