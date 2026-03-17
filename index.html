@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shattered Dominion — Fantasy Conquest</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        <div id="ui-layer"></div>
+    </div>
+
+    <!-- Data modules -->
+    <script src="data/races.js"></script>
+    <script src="data/classes.js"></script>
+    <script src="data/units.js"></script>
+    <script src="data/weapons.js"></script>
+    <script src="data/districts.js"></script>
+    <script src="data/events.js"></script>
+
+    <!-- Core engine -->
+    <script src="core/utils.js"></script>
+    <script src="core/state.js"></script>
+    <script src="core/input.js"></script>
+    <script src="core/renderer.js"></script>
+    <script src="core/screenManager.js"></script>
+    <script src="core/audio.js"></script>
+    <script src="core/sprites.js"></script>
+
+    <!-- Systems -->
+    <script src="systems/saveSystem.js"></script>
+    <script src="systems/campaignSystem.js"></script>
+    <script src="systems/battleSystem.js"></script>
+    <script src="systems/upgradeSystem.js"></script>
+    <script src="systems/lootSystem.js"></script>
+
+    <!-- Screens -->
+    <script src="screens/mainMenu.js"></script>
+    <script src="screens/characterCreation.js"></script>
+    <script src="screens/campaignMap.js"></script>
+    <script src="screens/battleScreen.js"></script>
+    <script src="screens/blacksmith.js"></script>
+    <script src="screens/barracks.js"></script>
+    <script src="screens/tavern.js"></script>
+    <script src="screens/healer.js"></script>
+    <script src="screens/market.js"></script>
+    <script src="screens/reward.js"></script>
+    <script src="screens/eventScreen.js"></script>
+    <script src="screens/codex.js"></script>
+    <script src="screens/gameOver.js"></script>
+    <script src="screens/victory.js"></script>
+    <script src="screens/inventory.js"></script>
+
+    <!-- Entry point -->
+    <script src="main.js"></script>
+</body>
+</html>
