@@ -60,7 +60,7 @@ const TavernScreen = {
             'Some say Dragonkin fire can melt even enchanted shields.',
             'The elves once had a city here. Now only ruins and regret remain.',
             'A merchant was robbed on the old road. His goods might still be there.',
-            'The blacksmith in Ironpass is said to be the best this side of the mountains.'
+            'The blacksmith in the Sunscar Wastes is said to be the best this side of the dunes.'
         ];
         return Utils.pick(rumors);
     },

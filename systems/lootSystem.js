@@ -37,7 +37,8 @@ const LootSystem = {
         // Weapon drop chance
         const weaponChance = isElite ? 40 : isBoss ? 80 : isCapital ? 50 : 15;
         if (Utils.chance(weaponChance)) {
-            loot.weapon = Weapons.generateLootWeapon(level);
+            const biome = Districts.getCurrentBiome();
+            loot.weapon = Weapons.generateLootWeapon(level, biome);
         }
 
         // Relic fragment from boss

@@ -23,6 +23,14 @@ const SaveSystem = {
             if (!raw) return false;
             const data = JSON.parse(raw);
             if (!data.player || !data.campaign) return false;
+            // Migrate old 'ironpass' district key to 'sunscar'
+            if (data.campaign.districts && data.campaign.districts.ironpass && !data.campaign.districts.sunscar) {
+                data.campaign.districts.sunscar = data.campaign.districts.ironpass;
+                delete data.campaign.districts.ironpass;
+                if (data.campaign.currentDistrict === 'ironpass') {
+                    data.campaign.currentDistrict = 'sunscar';
+                }
+            }
             GameState.player = data.player;
             if (!GameState.player.inventory) GameState.player.inventory = [];
             GameState.campaign = data.campaign;

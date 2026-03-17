@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>JS Error Check</title></head>
+<body>
+<pre id="log" style="font-family:monospace;white-space:pre-wrap;color:#eee;background:#111;padding:20px;"></pre>
+<script>
+const log = document.getElementById('log');
+function logMsg(msg) { log.textContent += msg + '\n'; }
+window.onerror = function(msg, src, line, col, err) {
+    logMsg('ERROR: ' + msg);
+    logMsg('  File: ' + src + ' Line: ' + line + ' Col: ' + col);
+    if (err && err.stack) logMsg('  Stack: ' + err.stack);
+    return false;
+};
+logMsg('Starting script load test...');
+</script>
+
+<!-- Data modules -->
+<script>logMsg('Loading races.js...');</script>
+<script src="data/races.js"></script>
+<script>logMsg('  OK. typeof Races = ' + typeof Races);</script>
+
+<script>logMsg('Loading classes.js...');</script>
+<script src="data/classes.js"></script>
+<script>logMsg('  OK. typeof Classes = ' + typeof Classes);</script>
+
+<script>logMsg('Loading units.js...');</script>
+<script src="data/units.js"></script>
+<script>logMsg('  OK. typeof Units = ' + typeof Units);</script>
+
+<script>logMsg('Loading weapons.js...');</script>
+<script src="data/weapons.js"></script>
+<script>logMsg('  OK. typeof Weapons = ' + typeof Weapons);</script>
+
+<script>logMsg('Loading districts.js...');</script>
+<script src="data/districts.js"></script>
+<script>logMsg('  OK. typeof Districts = ' + typeof Districts);</script>
+
+<script>logMsg('Loading events.js...');</script>
+<script src="data/events.js"></script>
+<script>logMsg('  OK. typeof Events = ' + typeof Events);</script>
+
+<!-- Core engine -->
+<script>logMsg('Loading utils.js...');</script>
+<script src="core/utils.js"></script>
+<script>logMsg('  OK. typeof Utils = ' + typeof Utils);</script>
+
+<script>logMsg('Loading state.js...');</script>
+<script src="core/state.js"></script>
+<script>logMsg('  OK. typeof GameState = ' + typeof GameState);</script>
+
+<script>logMsg('Loading input.js...');</script>
+<script src="core/input.js"></script>
+<script>logMsg('  OK. typeof Input = ' + typeof Input);</script>
+
+<script>logMsg('Loading renderer.js...');</script>
+<script src="core/renderer.js"></script>
+<script>logMsg('  OK. typeof Renderer = ' + typeof Renderer);</script>
+
+<script>logMsg('Loading screenManager.js...');</script>
+<script src="core/screenManager.js"></script>
+<script>logMsg('  OK. typeof ScreenManager = ' + typeof ScreenManager);</script>
+
+<script>logMsg('Loading audio.js...');</script>
+<script src="core/audio.js"></script>
+<script>logMsg('  OK. typeof Audio = ' + typeof Audio);</script>
+
+<script>logMsg('Loading sprites.js...');</script>
+<script src="core/sprites.js"></script>
+<script>logMsg('  OK. typeof Sprites = ' + typeof Sprites);</script>
+
+<!-- Systems -->
+<script>logMsg('Loading saveSystem.js...');</script>
+<script src="systems/saveSystem.js"></script>
+<script>logMsg('  OK. typeof SaveSystem = ' + typeof SaveSystem);</script>
+
+<script>logMsg('Loading campaignSystem.js...');</script>
+<script src="systems/campaignSystem.js"></script>
+<script>logMsg('  OK. typeof CampaignSystem = ' + typeof CampaignSystem);</script>
+
+<script>logMsg('Loading battleSystem.js...');</script>
+<script src="systems/battleSystem.js"></script>
+<script>logMsg('  OK. typeof BattleSystem = ' + typeof BattleSystem);</script>
+
+<script>logMsg('Loading upgradeSystem.js...');</script>
+<script src="systems/upgradeSystem.js"></script>
+<script>logMsg('  OK. typeof UpgradeSystem = ' + typeof UpgradeSystem);</script>
+
+<script>logMsg('Loading lootSystem.js...');</script>
+<script src="systems/lootSystem.js"></script>
+<script>logMsg('  OK. typeof LootSystem = ' + typeof LootSystem);</script>
+
+<!-- Screens -->
+<script>logMsg('Loading mainMenu.js...');</script>
+<script src="screens/mainMenu.js"></script>
+<script>logMsg('  OK. typeof MainMenuScreen = ' + typeof MainMenuScreen);</script>
+
+<script>logMsg('Loading characterCreation.js...');</script>
+<script src="screens/characterCreation.js"></script>
+<script>logMsg('  OK. typeof CharacterCreationScreen = ' + typeof CharacterCreationScreen);</script>
+
+<script>logMsg('Loading campaignMap.js...');</script>
+<script src="screens/campaignMap.js"></script>
+<script>logMsg('  OK. typeof CampaignMapScreen = ' + typeof CampaignMapScreen);</script>
+
+<script>logMsg('Loading battleScreen.js...');</script>
+<script src="screens/battleScreen.js"></script>
+<script>logMsg('  OK. typeof BattleScreen = ' + typeof BattleScreen);</script>
+
+<script>logMsg('Loading blacksmith.js...');</script>
+<script src="screens/blacksmith.js"></script>
+<script>logMsg('  OK. typeof BlacksmithScreen = ' + typeof BlacksmithScreen);</script>
+
+<script>logMsg('Loading barracks.js...');</script>
+<script src="screens/barracks.js"></script>
+<script>logMsg('  OK. typeof BarracksScreen = ' + typeof BarracksScreen);</script>
+
+<script>logMsg('Loading tavern.js...');</script>
+<script src="screens/tavern.js"></script>
+<script>logMsg('  OK. typeof TavernScreen = ' + typeof TavernScreen);</script>
+
+<script>logMsg('Loading healer.js...');</script>
+<script src="screens/healer.js"></script>
+<script>logMsg('  OK. typeof HealerScreen = ' + typeof HealerScreen);</script>
+
+<script>logMsg('Loading market.js...');</script>
+<script src="screens/market.js"></script>
+<script>logMsg('  OK. typeof MarketScreen = ' + typeof MarketScreen);</script>
+
+<script>logMsg('Loading reward.js...');</script>
+<script src="screens/reward.js"></script>
+<script>logMsg('  OK. typeof RewardScreen = ' + typeof RewardScreen);</script>
+
+<script>logMsg('Loading eventScreen.js...');</script>
+<script src="screens/eventScreen.js"></script>
+<script>logMsg('  OK. typeof EventScreen = ' + typeof EventScreen);</script>
+
+<script>logMsg('Loading codex.js...');</script>
+<script src="screens/codex.js"></script>
+<script>logMsg('  OK. typeof CodexScreen = ' + typeof CodexScreen);</script>
+
+<script>logMsg('Loading gameOver.js...');</script>
+<script src="screens/gameOver.js"></script>
+<script>logMsg('  OK. typeof GameOverScreen = ' + typeof GameOverScreen);</script>
+
+<script>logMsg('Loading victory.js...');</script>
+<script src="screens/victory.js"></script>
+<script>logMsg('  OK. typeof VictoryScreen = ' + typeof VictoryScreen);</script>
+
+<script>logMsg('Loading inventory.js...');</script>
+<script src="screens/inventory.js"></script>
+<script>logMsg('  OK. typeof InventoryScreen = ' + typeof InventoryScreen);</script>
+
+<script>logMsg('\n=== All scripts loaded. If you see errors above, those are the problems. ===');</script>
+</body></html>

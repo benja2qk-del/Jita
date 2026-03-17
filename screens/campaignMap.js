@@ -272,15 +272,17 @@ const CampaignMapScreen = {
 
     drawDistrictZones(ctx, mx, my, mw, mh, camp) {
         const zones = [
-            { key: 'grimspire', y1: 0.0, y2: 0.32, color: 'rgba(80,30,30,0.08)' },
-            { key: 'ironpass', y1: 0.32, y2: 0.64, color: 'rgba(80,70,40,0.06)' },
-            { key: 'greenhollow', y1: 0.64, y2: 1.0, color: 'rgba(30,80,30,0.08)' },
+            { key: 'grimspire', y1: 0.0, y2: 0.32, color: 'rgba(100,30,20,0.12)' },
+            { key: 'sunscar', y1: 0.32, y2: 0.64, color: 'rgba(180,140,50,0.10)' },
+            { key: 'greenhollow', y1: 0.64, y2: 1.0, color: 'rgba(30,90,25,0.12)' },
         ];
         zones.forEach(z => {
-            if (camp.currentDistrict === z.key) {
-                ctx.fillStyle = z.color;
-                ctx.fillRect(mx, my + z.y1 * mh, mw, (z.y2 - z.y1) * mh);
-            }
+            // Always show biome tint (stronger when current)
+            const isCurrent = camp.currentDistrict === z.key;
+            ctx.fillStyle = z.color;
+            ctx.globalAlpha = isCurrent ? 1 : 0.4;
+            ctx.fillRect(mx, my + z.y1 * mh, mw, (z.y2 - z.y1) * mh);
+            ctx.globalAlpha = 1;
             if (z.y1 > 0) {
                 ctx.strokeStyle = 'rgba(120,100,80,0.15)'; ctx.lineWidth = 1;
                 ctx.setLineDash([6, 8]);
@@ -291,8 +293,8 @@ const CampaignMapScreen = {
     },
 
     getNodePos(districtKey, node, mx, my, mw, mh) {
-        const bands = { grimspire: 0.02, ironpass: 0.34, greenhollow: 0.66 };
-        const bandH = { grimspire: 0.30, ironpass: 0.28, greenhollow: 0.30 };
+        const bands = { grimspire: 0.02, sunscar: 0.34, greenhollow: 0.66 };
+        const bandH = { grimspire: 0.30, sunscar: 0.28, greenhollow: 0.30 };
         const band = bands[districtKey] || 0;
         const bh = bandH[districtKey] || 0.30;
         const pad = 0.06;
@@ -436,7 +438,7 @@ const CampaignMapScreen = {
     drawDistrictLabels(ctx, mx, my, mw, mh, camp) {
         const labels = [
             { key: 'grimspire', name: 'Grimspire', y: 0.16, color: '#7a4040' },
-            { key: 'ironpass', name: 'Iron Pass', y: 0.48, color: '#7a6a40' },
+            { key: 'sunscar', name: 'Sunscar Wastes', y: 0.48, color: '#c0a040' },
             { key: 'greenhollow', name: 'Greenhollow', y: 0.80, color: '#407a35' },
         ];
         labels.forEach(l => {

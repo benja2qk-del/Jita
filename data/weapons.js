@@ -7,6 +7,13 @@ const Weapons = {
         Epic: '#a040e0',
         Legendary: '#e0a020'
     },
+    rarityGlow: {
+        Common: null,
+        Uncommon: null,
+        Rare: 'rgba(64,128,224,0.3)',
+        Epic: 'rgba(160,64,224,0.4)',
+        Legendary: 'rgba(224,160,32,0.5)'
+    },
 
     rangedTypes: ['bow', 'staff', 'wand'],
 
@@ -76,42 +83,70 @@ const Weapons = {
     },
 
     templates: [
+        // ── Common ──
         { name: 'Iron Blade', type: 'sword', rarity: 'Common', baseDamage: 12, bonus: {} },
         { name: 'War Axe', type: 'axe', rarity: 'Common', baseDamage: 14, bonus: { power: 1 } },
         { name: 'Hunter\'s Bow', type: 'bow', rarity: 'Common', baseDamage: 10, bonus: { focus: 1 } },
         { name: 'Oak Staff', type: 'staff', rarity: 'Common', baseDamage: 9, bonus: { focus: 2 } },
         { name: 'Willow Wand', type: 'wand', rarity: 'Common', baseDamage: 8, bonus: { focus: 2 } },
-        { name: 'Worn Lute', type: 'instrument', rarity: 'Common', baseDamage: 8, bonus: { focus: 1 } },
+        { name: 'Worn Daggers', type: 'daggers', rarity: 'Common', baseDamage: 7, bonus: { agility: 1 } },
+        // ── Uncommon ──
         { name: 'Mithril Edge', type: 'sword', rarity: 'Uncommon', baseDamage: 18, bonus: { agility: 2 } },
         { name: 'Serpent Fang', type: 'daggers', rarity: 'Uncommon', baseDamage: 14, bonus: { agility: 3, attackSpeed: 0.15 } },
         { name: 'Composite Bow', type: 'bow', rarity: 'Uncommon', baseDamage: 15, bonus: { focus: 2, agility: 1 } },
         { name: 'Runewood Staff', type: 'staff', rarity: 'Uncommon', baseDamage: 14, bonus: { focus: 3 } },
         { name: 'Crystal Wand', type: 'wand', rarity: 'Uncommon', baseDamage: 12, bonus: { focus: 3 } },
-        { name: 'Silver Harp', type: 'instrument', rarity: 'Uncommon', baseDamage: 12, bonus: { focus: 2, agility: 1 } },
+        { name: 'Brigand Cleaver', type: 'axe', rarity: 'Uncommon', baseDamage: 20, bonus: { power: 2 } },
+        // ── Rare ──
         { name: 'Flamebrand', type: 'sword', rarity: 'Rare', baseDamage: 24, bonus: { power: 3, fireDamage: 5 } },
         { name: 'Stormcleaver', type: 'axe', rarity: 'Rare', baseDamage: 28, bonus: { power: 4 } },
         { name: 'Galeforce Bow', type: 'bow', rarity: 'Rare', baseDamage: 22, bonus: { focus: 3, agility: 2 } },
         { name: 'Ember Staff', type: 'staff', rarity: 'Rare', baseDamage: 20, bonus: { focus: 4, fireDamage: 4 } },
         { name: 'Frostfire Wand', type: 'wand', rarity: 'Rare', baseDamage: 18, bonus: { focus: 5 } },
-        { name: 'War Drum', type: 'instrument', rarity: 'Rare', baseDamage: 17, bonus: { focus: 3, power: 2 } },
-        { name: 'Dragonbone Katana', type: 'katana', rarity: 'Epic', baseDamage: 32, bonus: { power: 3, agility: 3, fireDamage: 8 } },
+        { name: 'Assassin\'s Kiss', type: 'daggers', rarity: 'Rare', baseDamage: 19, bonus: { agility: 4, attackSpeed: 0.2 } },
+        // ── Epic ──
         { name: 'Voidblade', type: 'sword', rarity: 'Epic', baseDamage: 35, bonus: { power: 5, focus: 3 } },
         { name: 'Doombow', type: 'bow', rarity: 'Epic', baseDamage: 30, bonus: { focus: 5, agility: 3 } },
         { name: 'Archmage\'s Staff', type: 'staff', rarity: 'Epic', baseDamage: 28, bonus: { focus: 6, fireDamage: 6 } },
         { name: 'Soulweaver Wand', type: 'wand', rarity: 'Epic', baseDamage: 25, bonus: { focus: 7, vitality: 3 } },
-        { name: 'Dirge of Shadows', type: 'instrument', rarity: 'Epic', baseDamage: 24, bonus: { focus: 5, agility: 3 } },
+        { name: 'Nightfang Daggers', type: 'daggers', rarity: 'Epic', baseDamage: 26, bonus: { agility: 5, attackSpeed: 0.25, power: 3 } },
+        { name: 'Titan\'s Maul', type: 'axe', rarity: 'Epic', baseDamage: 38, bonus: { power: 6, vitality: 3 } },
+        // ── Legendary ──
         { name: 'Ashbringer', type: 'sword', rarity: 'Legendary', baseDamage: 45, bonus: { power: 8, vitality: 5, fireDamage: 12 } },
         { name: 'Starfall Longbow', type: 'bow', rarity: 'Legendary', baseDamage: 40, bonus: { focus: 8, agility: 5 } },
         { name: 'Staff of the Void', type: 'staff', rarity: 'Legendary', baseDamage: 38, bonus: { focus: 10, fireDamage: 10 } },
-        { name: 'Symphony of Ruin', type: 'instrument', rarity: 'Legendary', baseDamage: 35, bonus: { focus: 8, power: 4, agility: 4 } }
+        { name: 'Eclipse Daggers', type: 'daggers', rarity: 'Legendary', baseDamage: 36, bonus: { agility: 8, power: 5, attackSpeed: 0.3 } },
+        { name: 'Worldbreaker Axe', type: 'axe', rarity: 'Legendary', baseDamage: 48, bonus: { power: 10, vitality: 5 } }
     ],
+
+    // Biome-specific weapon pools — extra themed weapons per region
+    biomeWeapons: {
+        forest: [
+            { name: 'Thornwood Blade', type: 'sword', rarity: 'Uncommon', baseDamage: 17, bonus: { agility: 2, vitality: 1 } },
+            { name: 'Vinesnare Bow', type: 'bow', rarity: 'Rare', baseDamage: 23, bonus: { focus: 4, agility: 2 } },
+            { name: 'Druidic Staff', type: 'staff', rarity: 'Rare', baseDamage: 21, bonus: { focus: 5, vitality: 2 } },
+            { name: 'Wolfclaw Knives', type: 'daggers', rarity: 'Uncommon', baseDamage: 15, bonus: { agility: 3, attackSpeed: 0.15 } }
+        ],
+        desert: [
+            { name: 'Sandsteel Scimitar', type: 'sword', rarity: 'Uncommon', baseDamage: 19, bonus: { power: 2, agility: 1 } },
+            { name: 'Pharaoh\'s Crook', type: 'staff', rarity: 'Rare', baseDamage: 22, bonus: { focus: 5, power: 2 } },
+            { name: 'Dune Serpent Bow', type: 'bow', rarity: 'Uncommon', baseDamage: 16, bonus: { focus: 2, agility: 2 } },
+            { name: 'Scorpion Stinger', type: 'daggers', rarity: 'Rare', baseDamage: 20, bonus: { agility: 4, attackSpeed: 0.2 } }
+        ],
+        volcanic: [
+            { name: 'Obsidian Greatsword', type: 'sword', rarity: 'Rare', baseDamage: 26, bonus: { power: 4, fireDamage: 6 } },
+            { name: 'Magma Axe', type: 'axe', rarity: 'Rare', baseDamage: 30, bonus: { power: 5, fireDamage: 5 } },
+            { name: 'Cinderstaff', type: 'staff', rarity: 'Uncommon', baseDamage: 16, bonus: { focus: 3, fireDamage: 3 } },
+            { name: 'Ashen Recurve', type: 'bow', rarity: 'Uncommon', baseDamage: 17, bonus: { focus: 2, fireDamage: 2 } }
+        ]
+    },
 
     getWeaponDamage(weapon) {
         const enhanceMul = 1 + weapon.enhanceLevel * 0.08;
         return Math.floor(weapon.baseDamage * enhanceMul);
     },
 
-    generateLootWeapon(level) {
+    generateLootWeapon(level, biome) {
         const roll = Math.random();
         let rarity;
         if (roll < 0.50) rarity = 'Common';
@@ -121,7 +156,14 @@ const Weapons = {
         else rarity = 'Legendary';
 
         const playerClass = GameState.player ? GameState.player.class : null;
+
+        // Merge general + biome-specific pool
         let pool = Weapons.templates.filter(w => w.rarity === rarity);
+        if (biome && Weapons.biomeWeapons[biome]) {
+            const biomePool = Weapons.biomeWeapons[biome].filter(w => w.rarity === rarity);
+            pool = pool.concat(biomePool);
+        }
+
         if (playerClass && this.classWeapons[playerClass]) {
             const classPool = pool.filter(w => this.canClassUse(playerClass, w.type));
             if (classPool.length > 0) pool = classPool;

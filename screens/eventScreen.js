@@ -9,7 +9,7 @@ const EventScreen = {
         this.phase = 'choosing';
         this.result = null;
 
-        const eventId = this.node.eventId || Utils.pick(Object.keys(Events.data));
+        const eventId = this.node.eventId || Utils.pick(Events.getEventsForBiome(Districts.getCurrentBiome()));
         this.eventData = Events.data[eventId];
         this.eventId = eventId;
 
