@@ -49,10 +49,13 @@ const BarracksScreen = {
             ctx.textAlign = 'left';
             ctx.font = 'bold 16px Segoe UI';
             ctx.fillStyle = template.color;
-            // Draw unit sprite next to name
-            const unitSpriteKey = 'unit_' + slot.type;
-            if (Sprites.get(unitSpriteKey)) {
-                Sprites.draw(ctx, unitSpriteKey, px + panelW - 35, py + 45, { scale: 1.2 });
+            // Draw unit idle sprite
+            const _barrUnitClsMap = { infantry: 'warrior', archer: 'archer', cavalry: 'samurai', brute: 'tank' };
+            const _barrRace = (GameState.player && GameState.player.race || 'Human').toLowerCase();
+            const _barrCls  = _barrUnitClsMap[slot.type] || 'warrior';
+            const _barrDrawn = UnitSprites.draw(ctx, _barrRace, _barrCls, 'idle', px + panelW - 30, py + 70, 70 / 9, false);
+            if (!_barrDrawn && Sprites.get('unit_' + slot.type)) {
+                Sprites.draw(ctx, 'unit_' + slot.type, px + panelW - 35, py + 45, { scale: 1.2 });
             }
             ctx.fillText(`${template.name}`, px + 15, py + 28);
 

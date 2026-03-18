@@ -228,10 +228,14 @@ const InventoryScreen = {
 
             Utils.drawPanel(ctx, lx, y, cardW, cardH, hover ? '#5a5a6a' : '#3a3a4a', '#12121a');
 
-            // Unit sprite
-            const spriteKey = 'unit_' + slot.type;
-            if (Sprites.get(spriteKey)) {
-                Sprites.draw(ctx, spriteKey, lx + 25, y + 35, { scale: 1.2 });
+            // Unit idle sprite
+            const _invUnitClsMap = { infantry: 'warrior', archer: 'archer', cavalry: 'samurai', brute: 'tank' };
+            const _invRace = (GameState.player && GameState.player.race || 'Human').toLowerCase();
+            const _invCls  = _invUnitClsMap[slot.type] || 'warrior';
+            const _invDrawn = UnitSprites.draw(ctx, _invRace, _invCls, 'idle', lx + 28, y + 35, 55 / 9, false);
+            if (!_invDrawn) {
+                const spriteKey = 'unit_' + slot.type;
+                if (Sprites.get(spriteKey)) Sprites.draw(ctx, spriteKey, lx + 25, y + 35, { scale: 1.2 });
             }
 
             // Unit info

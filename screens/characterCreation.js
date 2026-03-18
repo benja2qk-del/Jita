@@ -158,10 +158,16 @@ const CharacterCreationScreen = {
                 Dragonkin: { skin: '#c08a60', hair: '#1a0808', armor: '#5a2818', armorLight: '#7a3828', pants: '#2a1810', boots: '#1a0808', weapon: 'axe', shield: false, helmetColor: '#5a2020', horns: true, hornColor: '#5a4a30', scales: true, scaleColor: 'rgba(200,80,40,0.25)', glowEyes: true, eyeColor: '#cc4400', shoulderPad: true, spikePads: true, tail: true }
             };
             const raceApp = raceAppearances[key] || raceAppearances.Human;
-            ctx.save();
-            ctx.beginPath(); ctx.rect(x + 5, y + 5, 180, 90); ctx.clip();
-            BattleScreen._drawHumanoid(ctx, x + 95, y + 82, 3.8, 1, 0, 'idle', raceApp, false, 0, {});
-            ctx.restore();
+            // Portrait image (centered, fills the top card area)
+            const _racePortraitCls = (this.selectedClass || 'Warrior').toLowerCase();
+            const _raceStr = key.toLowerCase();
+            const _raceDrawn = UnitSprites.drawPortrait(ctx, _raceStr, _racePortraitCls, x + 95, y + 52, 88, 8);
+            if (!_raceDrawn) {
+                ctx.save();
+                ctx.beginPath(); ctx.rect(x + 5, y + 5, 180, 90); ctx.clip();
+                BattleScreen._drawHumanoid(ctx, x + 95, y + 82, 3.8, 1, 0, 'idle', raceApp, false, 0, {});
+                ctx.restore();
+            }
 
             // Name
             Utils.drawTextCentered(ctx, race.name, x + 95, y + 95, 'bold 18px Segoe UI', race.color);
@@ -247,10 +253,15 @@ const CharacterCreationScreen = {
                 bracers: classApp.bracers, gauntlets: classApp.gauntlets,
                 plume: classApp.plume, plumeColor: classApp.plumeColor
             };
-            ctx.save();
-            ctx.beginPath(); ctx.rect(x + 5, y + 5, cardW - 10, 64); ctx.clip();
-            BattleScreen._drawHumanoid(ctx, x + cardW / 2, y + 64, 2.5, 1, 0, 'idle', classPreviewApp, false, 0, { capeColor: classApp.capeColor });
-            ctx.restore();
+            const _clsRaceStr = (this.selectedRace || 'Human').toLowerCase();
+            const _clsStr = key.toLowerCase();
+            const _clsDrawn = UnitSprites.drawPortrait(ctx, _clsRaceStr, _clsStr, x + cardW / 2, y + 37, 64, 6);
+            if (!_clsDrawn) {
+                ctx.save();
+                ctx.beginPath(); ctx.rect(x + 5, y + 5, cardW - 10, 64); ctx.clip();
+                BattleScreen._drawHumanoid(ctx, x + cardW / 2, y + 64, 2.5, 1, 0, 'idle', classPreviewApp, false, 0, { capeColor: classApp.capeColor });
+                ctx.restore();
+            }
 
             Utils.drawTextCentered(ctx, cls.name, x + cardW / 2, y + 68, 'bold 14px Segoe UI', cls.color);
 
@@ -343,10 +354,15 @@ const CharacterCreationScreen = {
             spikePads: p === 'Dragonkin' && classApp.shoulderPad,
             eyeColor: raceEyes[p]
         };
-        ctx.save();
-        ctx.beginPath(); ctx.rect(Renderer.cx - 50, fy + 15, 100, 110); ctx.clip();
-        BattleScreen._drawHumanoid(ctx, Renderer.cx, fy + 100, 4.5, 1, 0, 'idle', previewApp, false, 0, { capeColor: this.bannerColor });
-        ctx.restore();
+        const _detRace = (this.selectedRace || 'Human').toLowerCase();
+        const _detCls  = (this.selectedClass || 'Warrior').toLowerCase();
+        const _detDrawn = UnitSprites.drawPortrait(ctx, _detRace, _detCls, Renderer.cx, fy + 70, 100, 10);
+        if (!_detDrawn) {
+            ctx.save();
+            ctx.beginPath(); ctx.rect(Renderer.cx - 50, fy + 15, 100, 110); ctx.clip();
+            BattleScreen._drawHumanoid(ctx, Renderer.cx, fy + 100, 4.5, 1, 0, 'idle', previewApp, false, 0, { capeColor: this.bannerColor });
+            ctx.restore();
+        }
     },
 
     renderConfirm(ctx) {
@@ -390,10 +406,15 @@ const CharacterCreationScreen = {
         ctx.fillStyle = 'rgba(0,0,0,0)';
         ctx.beginPath(); ctx.arc(previewX, previewY, 1, 0, Math.PI * 2); ctx.fill();
         ctx.shadowBlur = 0;
-        ctx.save();
-        ctx.beginPath(); ctx.rect(previewX - 70, panelY + 50, 140, 300); ctx.clip();
-        BattleScreen._drawHumanoid(ctx, previewX, previewY, 6.5, 1, 0, 'idle', confirmApp, false, 0, { capeColor: this.bannerColor });
-        ctx.restore();
+        const _confRace = (this.selectedRace || 'Human').toLowerCase();
+        const _confCls  = (this.selectedClass || 'Warrior').toLowerCase();
+        const _confDrawn = UnitSprites.drawPortrait(ctx, _confRace, _confCls, previewX, panelY + 200, 200, 14);
+        if (!_confDrawn) {
+            ctx.save();
+            ctx.beginPath(); ctx.rect(previewX - 70, panelY + 50, 140, 300); ctx.clip();
+            BattleScreen._drawHumanoid(ctx, previewX, previewY, 6.5, 1, 0, 'idle', confirmApp, false, 0, { capeColor: this.bannerColor });
+            ctx.restore();
+        }
 
         let y = panelY + 65;
         const lx = panelX + 40;

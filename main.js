@@ -6,6 +6,7 @@
     Renderer.init();
     Input.init(Renderer.canvas);
     Sprites.init();
+    UnitSprites.init();
     Audio.init();
 
     // Register all screens

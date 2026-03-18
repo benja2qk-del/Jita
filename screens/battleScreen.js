@@ -603,6 +603,28 @@ const BattleScreen = {
         return null;
     },
 
+    // Maps allied unit types to generated sprite class names
+    _UNIT_TYPE_TO_CLASS: {
+        infantry: 'warrior',
+        archer:   'archer',
+        cavalry:  'samurai',
+        brute:    'tank',
+    },
+
+    // Maps game animation state → PNG pose filename stem
+    _getPose(state, cls, facingRight, isDead) {
+        if (isDead) return 'death';
+        switch (state) {
+            case 'walk':   return facingRight ? 'walk_right' : 'walk_left';
+            case 'attack':
+                if (cls === 'archer') return 'attack_ranged';
+                if (cls === 'mage')   return 'cast';
+                return 'attack_melee';
+            case 'hurt':   return 'hurt';
+            default:       return 'idle';
+        }
+    },
+
     // ─── Appearance configs ───
     _unitAppearance: {
         // Allied — detailed configs matching enemy quality
@@ -2674,7 +2696,21 @@ const BattleScreen = {
             }
 
             const scale = s / 9;
-            this._drawHumanoid(ctx, dx, dy, scale, facing, t, state, appearance, hurtTint, u.attackAnimTimer);
+
+            // Try AI sprite for allied units; fall back to procedural renderer
+            let _drewPng = false;
+            if (u.side === 'ally' && GameState.player) {
+                const _race = (GameState.player.race || 'Human').toLowerCase();
+                const _cls  = this._UNIT_TYPE_TO_CLASS[u.type] || 'warrior';
+                const _pose = this._getPose(state, _cls, u.facingRight, isDead);
+                // Walk poses encode direction in the sprite; other poses flip on facingRight
+                const _isWalk = _pose === 'walk_left' || _pose === 'walk_right';
+                const _flipX  = _isWalk ? false : !u.facingRight;
+                _drewPng = UnitSprites.draw(ctx, _race, _cls, _pose, dx, dy, scale, _flipX);
+            }
+            if (!_drewPng) {
+                this._drawHumanoid(ctx, dx, dy, scale, facing, t, state, appearance, hurtTint, u.attackAnimTimer);
+            }
 
             // Tier visual flair (drawn on top)
             if (tier >= 2) {
@@ -2865,7 +2901,17 @@ const BattleScreen = {
             }
             const scale = s / 7;
             const capeCol = GameState.player.bannerColor || classApp.capeColor;
-            this._drawHumanoid(ctx, dx, dy, scale, facing, t, state, appearance, hurtTint, h.attackAnimTimer, { capeColor: capeCol, eyeColor: raceEyes[playerRace] });
+
+            // Try AI sprite for the hero
+            const _heroRace = (playerRace || 'Human').toLowerCase();
+            const _heroCls  = (heroClass || 'Warrior').toLowerCase();
+            const _heroPose = this._getPose(state, _heroCls, h.facingRight, isDead);
+            const _heroIsWalk = _heroPose === 'walk_left' || _heroPose === 'walk_right';
+            const _heroFlip   = _heroIsWalk ? false : !h.facingRight;
+            const _drewHeroPng = UnitSprites.draw(ctx, _heroRace, _heroCls, _heroPose, dx, dy, scale, _heroFlip);
+            if (!_drewHeroPng) {
+                this._drawHumanoid(ctx, dx, dy, scale, facing, t, state, appearance, hurtTint, h.attackAnimTimer, { capeColor: capeCol, eyeColor: raceEyes[playerRace] });
+            }
 
             // Weapon rarity glow (Rare+)
             const pw = GameState.player.weapon;
@@ -3229,40 +3275,54 @@ const BattleScreen = {
         ctx.lineWidth = 1;
         ctx.beginPath(); ctx.moveTo(0, 80); ctx.lineTo(Renderer.w, 80); ctx.stroke();
 
+        // Hero portrait (top-left corner of HUD)
+        const _hudRace = (GameState.player && GameState.player.race || 'Human').toLowerCase();
+        const _hudCls  = (GameState.player && GameState.player.class || 'Warrior').toLowerCase();
+        const _hudPortraitDrawn = UnitSprites.drawPortrait(ctx, _hudRace, _hudCls, 40, 40, 68, 6);
+        if (!_hudPortraitDrawn) {
+            // Fallback: coloured circle placeholder
+            ctx.fillStyle = '#2a2a3a';
+            ctx.beginPath(); ctx.arc(40, 40, 34, 0, Math.PI * 2); ctx.fill();
+        }
+        // Portrait border ring
+        ctx.strokeStyle = '#c8a84e';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(6, 6, 68, 68);
+
         // Hero name + level indicator
         ctx.textAlign = 'left';
         ctx.font = 'bold 13px Segoe UI';
         ctx.fillStyle = '#e0c060';
-        ctx.fillText(`${hero.name}`, 15, 20);
+        ctx.fillText(`${hero.name}`, 82, 20);
 
         // Hero HP (smooth)
         const dispHeroHp = hero.displayHp !== undefined ? hero.displayHp : hero.hp;
         ctx.font = '11px Segoe UI';
         ctx.fillStyle = '#a0a0b0';
-        ctx.fillText('HP', 15, 38);
-        Utils.drawBar(ctx, 35, 30, 160, 12, Utils.clamp(dispHeroHp / hero.maxHp, 0, 1), '#c03030');
+        ctx.fillText('HP', 82, 38);
+        Utils.drawBar(ctx, 102, 30, 160, 12, Utils.clamp(dispHeroHp / hero.maxHp, 0, 1), '#c03030');
         // Damage preview (show gap between display and actual)
         if (dispHeroHp > hero.hp + 1) {
             const fullBarW = 160;
             const actualRatio = Utils.clamp(hero.hp / hero.maxHp, 0, 1);
             const dispRatio = Utils.clamp(dispHeroHp / hero.maxHp, 0, 1);
             ctx.fillStyle = 'rgba(255,100,50,0.4)';
-            ctx.fillRect(35 + actualRatio * fullBarW, 30, (dispRatio - actualRatio) * fullBarW, 12);
+            ctx.fillRect(102 + actualRatio * fullBarW, 30, (dispRatio - actualRatio) * fullBarW, 12);
         }
         ctx.fillStyle = '#e0d8c0';
         ctx.font = '10px Segoe UI';
-        ctx.fillText(`${Math.ceil(hero.hp)}/${hero.maxHp}`, 200, 40);
+        ctx.fillText(`${Math.ceil(hero.hp)}/${hero.maxHp}`, 267, 40);
 
         ctx.font = '11px Segoe UI';
         ctx.fillStyle = '#a0a0b0';
-        ctx.fillText('MP', 15, 56);
-        Utils.drawBar(ctx, 35, 48, 160, 10, hero.mana / hero.maxMana, '#3060c0');
+        ctx.fillText('MP', 82, 56);
+        Utils.drawBar(ctx, 102, 48, 160, 10, hero.mana / hero.maxMana, '#3060c0');
         ctx.fillStyle = '#e0d8c0';
         ctx.font = '10px Segoe UI';
-        ctx.fillText(`${Math.ceil(hero.mana)}/${hero.maxMana}`, 200, 56);
+        ctx.fillText(`${Math.ceil(hero.mana)}/${hero.maxMana}`, 267, 56);
 
         // Skills
-        let sx = 270;
+        let sx = 340;
         hero.skills.forEach(skill => {
             const ready = skill.currentCd <= 0 && hero.mana >= skill.manaCost;
             const onCd = skill.currentCd > 0;
