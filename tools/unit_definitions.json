@@ -1,0 +1,168 @@
+{
+  "_comment": "Unit definitions for Shattered Dominion asset generation pipeline.",
+  "_version": "2.0.0",
+
+  "style_global": {
+    "art_style":   "stylized 2D fantasy game asset, clean and readable, semi-stylized illustration, designed for in-game use",
+    "not_style":   "NOT photorealistic, NOT oil painting, NOT cinematic portrait, NOT concept-art poster, NOT hyper-detailed face rendering, NOT chibi, NOT goofy, NOT watercolor, NOT flat vector, NOT anime",
+    "quality":     "clean linework, readable silhouette, consistent game-ready style, professional 2D game art",
+    "lighting":    "clear flat-to-soft directional lighting, readable contrast, no dramatic cinematic shadow",
+    "background":  "transparent background, isolated subject only, no floor, no ground shadow, no environment, no backdrop",
+    "format":      "single PNG sprite, full body visible, no cropping of limbs, centered composition"
+  },
+
+  "pose_styles": {
+    "idle":           "relaxed combat-ready standing pose, weight balanced, weapon held loosely at side or low guard, facing slightly right",
+    "walk_left":      "mid-stride walking pose moving left, left foot forward, arms in natural walking swing, body slightly leaned forward",
+    "walk_right":     "mid-stride walking pose moving right, right foot forward, arms in natural walking swing, body slightly leaned forward",
+    "attack_melee":   "mid-swing melee attack, weapon raised or swinging toward the right, body twisted with attack momentum, aggressive pose",
+    "attack_ranged":  "ranged attack pose, bow drawn or projectile thrown toward the right, weight on back foot, arm extended",
+    "cast":           "spellcasting pose, one or both hands raised with glowing magical energy, staff lifted or hands open with arcane light",
+    "hurt":           "recoiling from a hit, staggering backward to the left, one arm raised defensively, visibly pained",
+    "death":          "falling or collapsed on the ground, weapon dropped, eyes closed, final defeated pose",
+    "portrait":       "simple waist-up portrait, facing slightly left, weapon visible at side, clean and readable, stylized game UI card art"
+  },
+
+  "framing": {
+    "battle_unit": "full body visible from top of head to feet, character fills 75-85 percent of frame height, centered horizontally, transparent background",
+    "portrait":    "waist-up, head and torso centered, fills 85 percent of frame, transparent background"
+  },
+
+  "races": {
+    "human": {
+      "display_name": "Human",
+      "anatomy": "average human proportions, sturdy and athletic, broad shoulders, square jaw, serious expression",
+      "skin_tone_range": "fair to tan European fantasy complexion",
+      "distinguishing": "no fantastical features, wholly human appearance, capable and battle-hardened look"
+    },
+    "elf": {
+      "display_name": "Elf",
+      "anatomy": "slender but wiry, slightly taller than human, graceful limbs, sharply pointed ears, angular refined facial features, high cheekbones",
+      "skin_tone_range": "pale ivory to light olive, flawless skin",
+      "distinguishing": "long pointed ears clearly visible, elegant bone structure, luminous slightly-large eyes, ageless face"
+    },
+    "dragonkin": {
+      "display_name": "Dragonkin",
+      "anatomy": "powerful broad-shouldered humanoid, shorter neck, heavy musculature, pronounced brow ridges, slightly forward-leaning stance",
+      "skin_tone_range": "dark charcoal grey to burnt umber, leathery scaled skin",
+      "distinguishing": "curved swept-back bone horns, distinct reptilian snout with flared nostrils, slit-pupil eyes glowing amber-orange, visible neck and forearm scales, non-prehensile tail"
+    }
+  },
+
+  "classes": {
+    "warrior": {
+      "display_name": "Warrior",
+      "armor_description": "full plate armor, pauldrons, gorget, gauntlets, greaves, battered and scarred from battle, functional medieval fantasy style",
+      "weapon": "one-handed broadsword and kite shield or two-handed greatsword",
+      "silhouette_notes": "broad and imposing, heavy armor mass, low center of gravity, shield prominent on off-arm"
+    },
+    "samurai": {
+      "display_name": "Samurai",
+      "armor_description": "lamellar-style fantastic armor with overlapping lacquered plates, kabuto-inspired helmet with faceplate, tassets over hakama-style lower body, elegant but functional",
+      "weapon": "single curved katana-style blade, long grip, slight curve",
+      "silhouette_notes": "compact and precise, sharp angular silhouette, disciplined posture, no wasted movement"
+    },
+    "ninja": {
+      "display_name": "Ninja",
+      "armor_description": "dark layered cloth armor, tight-fitting, minimal plating on forearms and shins, face wrapped leaving only eyes visible, utility pouches on belt",
+      "weapon": "pair of short-bladed daggers or a wakizashi",
+      "silhouette_notes": "lean and low-profile, weight on front foot, poised to strike, shadow-operative body language"
+    },
+    "archer": {
+      "display_name": "Archer",
+      "armor_description": "medium leather armor, reinforced chest piece, bracers, light pauldron on bow arm, practical ranger gear, hood or padded coif",
+      "weapon": "longbow held at side or raised, quiver on back with visible arrows",
+      "silhouette_notes": "lean athletic build, side-on stance shows archer profile, quiver on back is visible"
+    },
+    "mage": {
+      "display_name": "Mage",
+      "armor_description": "layered arcane robes with rigid pauldrons or vambraces, arcane runes embossed on fabric, tall peaked hat or close hood, leather belt with pouches, not a costume — functional war-mage gear",
+      "weapon": "tall gnarled wood staff with glowing arcane crystal set in iron mount at top",
+      "silhouette_notes": "tall vertical silhouette from staff, robes have weight and fabric complexity, no cartoonish oversized hat"
+    },
+    "tank": {
+      "display_name": "Tank",
+      "armor_description": "heaviest full-plate armor available, reinforced everywhere, tower shield, great helm with visor, layered pauldrons, thick greaves, looks impenetrable",
+      "weapon": "tower shield as primary defense, short mace or war hammer in weapon hand",
+      "silhouette_notes": "widest and heaviest silhouette of all classes, shield creates a wall of metal, low planted stance"
+    }
+  },
+
+  "tiers": {
+    "basic":   "standard issue gear, well-maintained but plain, no ornament",
+    "veteran": "battle-worn gear with repairs, minor distinctions like a colored plume or engraved emblem, clearly experienced",
+    "elite":   "masterwork equipment, ornate engravings, high-quality materials, commanding presence, clearly elite status"
+  },
+
+  "biomes": {
+    "forest":   "armor and gear tinted with forest greens and dark browns, moss or leaf motifs pressed into metal, earthy worn appearance",
+    "desert":   "sun-bleached patina on armor, sand-worn edges, warm ochre and rust color tones, cloth wrappings over metal to prevent sun heat",
+    "volcanic": "armor scorched with heat marks, dark iron with orange glowing cracks at joints, obsidian accents, ember-toned color palette"
+  },
+
+  "batch_presets": [
+    {
+      "_comment": "Core idle sprites — all race/class combos (main starting batch)",
+      "preset_name": "core_idle",
+      "poses": ["idle"],
+      "tiers": ["basic"],
+      "biomes": [null],
+      "races": ["human", "elf", "dragonkin"],
+      "classes": ["warrior", "samurai", "ninja", "archer", "mage", "tank"]
+    },
+    {
+      "_comment": "Core action frames — all race/class combos",
+      "preset_name": "core_actions",
+      "poses": ["attack_melee", "hurt", "death"],
+      "tiers": ["basic"],
+      "biomes": [null],
+      "races": ["human", "elf", "dragonkin"],
+      "classes": ["warrior", "samurai", "ninja", "archer", "mage", "tank"]
+    },
+    {
+      "_comment": "Walk cycle frames — both directions",
+      "preset_name": "core_walk",
+      "poses": ["walk_left", "walk_right"],
+      "tiers": ["basic"],
+      "biomes": [null],
+      "races": ["human", "elf", "dragonkin"],
+      "classes": ["warrior", "samurai", "ninja", "archer", "mage", "tank"]
+    },
+    {
+      "_comment": "Ranged and cast frames for relevant classes",
+      "preset_name": "core_ranged_cast",
+      "poses": ["attack_ranged", "cast"],
+      "tiers": ["basic"],
+      "biomes": [null],
+      "races": ["human", "elf", "dragonkin"],
+      "classes": ["archer", "mage"]
+    },
+    {
+      "_comment": "Simple stylized portraits for game UI cards",
+      "preset_name": "core_portraits",
+      "poses": ["portrait"],
+      "tiers": ["basic"],
+      "biomes": [null],
+      "races": ["human", "elf", "dragonkin"],
+      "classes": ["warrior", "samurai", "ninja", "archer", "mage", "tank"]
+    },
+    {
+      "_comment": "Full set of poses for one character (test batch)",
+      "preset_name": "human_warrior_all",
+      "poses": ["idle", "walk_left", "walk_right", "attack_melee", "hurt", "death"],
+      "tiers": ["basic"],
+      "biomes": [null],
+      "races": ["human"],
+      "classes": ["warrior"]
+    },
+    {
+      "_comment": "Quick single idle test — one character, one pose",
+      "preset_name": "test_one",
+      "poses": ["idle"],
+      "tiers": ["basic"],
+      "biomes": [null],
+      "races": ["human"],
+      "classes": ["warrior"]
+    }
+  ]
+}

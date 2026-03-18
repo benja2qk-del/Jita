@@ -42,7 +42,7 @@ const Input = {
         canvas.addEventListener('contextmenu', onContext);
 
         this._listeners = [
-            ['keydown', onKeyDown, window],
+            ['keydown', onKeyDown, window], 
             ['keyup', onKeyUp, window],
             ['mousemove', onMouseMove, canvas],
             ['mousedown', onMouseDown, canvas],

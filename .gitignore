@@ -1,0 +1,34 @@
+# ── Python / Virtualenv ──────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+*.spec
+venv/
+.venv/
+env/
+.env
+*.env
+
+# ── Node / npm ───────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# ── Generated assets ─────────────────────────────────────────
+# Uncomment if you do NOT want generated PNGs tracked in git.
+# assets/generated/
+
+# ── OS / editor ──────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.suo
+*.user

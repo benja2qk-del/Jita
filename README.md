@@ -117,3 +117,121 @@ All content is data-driven. No engine changes needed to add races, classes, unit
 ## Save System
 
 Game auto-saves after battles and building visits. Uses `localStorage`. Click the save button on the campaign map. Use "Continue" on the main menu to resume.
+
+---
+
+## AI Asset Generation Pipeline
+
+The `tools/` folder contains a Python pipeline that generates game art (unit sprites and portrait cards) using the OpenAI Images API (DALL-E-3).
+
+### Setup
+
+1. **Install Python dependencies** (Python 3.10+ required):
+   ```bash
+   pip install openai python-dotenv
+   ```
+
+2. **Create your `.env` file** from the provided example:
+   ```bash
+   cp .env.example .env
+   ```
+   Open `.env` and paste your OpenAI API key:
+   ```
+   OPENAI_API_KEY=sk-...your-key-here...
+   ```
+   The `.env` file is git-ignored and never committed.
+
+### Quickstart
+
+```bash
+cd tools
+
+# Preview what would be generated (no API calls, free):
+python generate_assets.py --dry-run
+
+# Generate all core portraits (18 combos: 3 races × 6 classes):
+python generate_assets.py --preset core_portraits
+
+# Generate one specific asset:
+python generate_assets.py --race human --class warrior --pose idle
+
+# Re-generate an asset you already have:
+python generate_assets.py --race human --class warrior --pose idle --overwrite
+
+# Verbose output (shows prompt previews and debug info):
+python generate_assets.py --dry-run --verbose
+```
+
+### Output Structure
+
+```
+assets/generated/
+├── manifest.json                       ← tracks every generation
+├── units/
+│   ├── human/
+│   │   ├── warrior/
+│   │   │   ├── idle_basic.png
+│   │   │   ├── attack_basic.png
+│   │   │   └── idle_basic_forest.png   ← biome variant
+│   │   └── mage/
+│   │       └── idle_basic.png
+│   ├── elf/
+│   └── dragonkin/
+└── portraits/
+    ├── human/
+    │   └── warrior/
+    │       └── portrait_basic.png
+    ├── elf/
+    └── dragonkin/
+```
+
+### Batch Presets
+
+Presets are defined in `tools/unit_definitions.json` under `batch_presets`:
+
+| Preset name | Description |
+|-------------|-------------|
+| `core_portraits` | All 18 race/class portrait cards (basic tier, no biome) |
+| `core_battle` | All 18 race/class idle sprites |
+| `human_warrior_poses` | Attack + hurt poses for Human Warrior only |
+
+### Pipeline Files
+
+| File | Purpose |
+|------|---------|
+| `tools/unit_definitions.json` | All races, classes, poses, tiers, biomes, and prompting descriptors |
+| `tools/prompt_builder.py` | Builds deterministic prompts from structured definitions |
+| `tools/openai_image_client.py` | API client with retry, backoff, timeout, and atomic save |
+| `tools/asset_manifest.py` | Persistent JSON manifest — tracks all generations, enables skip-existing |
+| `tools/generate_assets.py` | Main entry point with CLI flags, concurrency, and summary report |
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `OPENAI_API_KEY` | *(required)* | Your OpenAI secret key |
+| `OPENAI_ORG_ID` | *(optional)* | Your OpenAI organization ID |
+| `OPENAI_IMAGE_MODEL` | `dall-e-3` | Image model to use |
+| `OPENAI_IMAGE_SIZE` | `1024x1024` | Output image dimensions |
+| `OPENAI_IMAGE_QUALITY` | `standard` | `standard` or `hd` (hd costs 2× more) |
+| `OPENAI_MAX_CONCURRENCY` | `3` | Max parallel API requests |
+| `OPENAI_TIMEOUT_SECONDS` | `60` | Per-request timeout |
+
+### Previewing a Prompt
+
+You can inspect the exact prompt that will be sent to OpenAI before spending credits:
+
+```bash
+python tools/prompt_builder.py --race dragonkin --class mage --pose portrait --tier elite --biome volcanic
+```
+
+### Inspecting the Manifest
+
+```bash
+# See all generated assets
+python tools/asset_manifest.py
+
+# Filter by status or race
+python tools/asset_manifest.py --status failed
+python tools/asset_manifest.py --race elf --class archer
+```
